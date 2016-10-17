@@ -1,0 +1,19 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+# Logs
+logs
+*.log
+npm-debug.log*
+
+
+
+
+*.pyc
+db.sqlite3
+
+.idea
+
+**.pyc
+
+static
