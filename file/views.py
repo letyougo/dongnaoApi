@@ -20,7 +20,7 @@ def get(request):
         d = {}
         d['path'] = os.path.join(path,i)
         d['name'] = i
-        d['ext'] = os.path.splitext(i)[0]
+        d['ext'] = os.path.splitext(i).join('.')
         d['isFolder'] = os.path.isdir(d['path'])
         json.append(d)
 
