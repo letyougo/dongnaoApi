@@ -22,5 +22,5 @@ from rest_framework import routers
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('react1.url')),
-
+    url(r'^', include('file.url')),
 ]

@@ -151,3 +151,5 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
+
+FILE_ROOT = '/'
