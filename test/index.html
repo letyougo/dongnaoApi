@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+    var host = 'http://10.232.31.15:9527'
+</body>
+<script src="./jquery.min.js"></script>
+<script>
+
+
+    var host = 'http://101.200.129.112:9527'
+  $.ajax({
+        url:host + '/react1/student/',
+        type:'get',
+        success:function (response) {
+            console.log(response)
+        }
+    })
+
+
+
+</script>
+</html>

@@ -17,3 +17,7 @@ npm-debug.log*
 **.pyc
 
 static
+
+templates/
+/db.sqlite3
+/test
