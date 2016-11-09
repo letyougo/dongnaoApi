@@ -20617,3 +20617,73 @@ Traceback (most recent call last):
     data = self._sock.recv(self._rbufsize)
 error: [Errno 104] Connection reset by peer
 [09/Nov/2016 05:52:35] "GET /react1/student/ HTTP/1.1" 200 4024
+ 49635)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 50868)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 50918)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 50976)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 51048)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 52912)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 53110)
+----------------------------------------
+----------------------------------------
+Exception happened during processing of request from ('101.231.137.225', 53704)
+----------------------------------------
+/root/dongnaoApi/react1/url.py:10: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^react1/student/(?P<pk>[0-9]+)/$', views.StudentDetail.as_view(), name='student-detail'),
+
+Unhandled exception in thread started by <function wrapper at 0x7f5cd8bfe488>
+Performing system checks...
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/autoreload.py", line 226, in wrapper
+    fn(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/commands/runserver.py", line 116, in inner_run
+    self.check(display_num_errors=True)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/base.py", line 426, in check
+    include_deployment_checks=include_deployment_checks,
+  File "/usr/local/lib/python2.7/dist-packages/django/core/checks/registry.py", line 75, in run_checks
+    new_errors = check(app_configs=app_configs)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/checks/urls.py", line 13, in check_url_config
+    return check_resolver(resolver)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/checks/urls.py", line 23, in check_resolver
+    for pattern in resolver.url_patterns:
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/functional.py", line 33, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 417, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/functional.py", line 33, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 410, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/root/dongnaoApi/dongnaoApi/urls.py", line 27, in <module>
+    url(r'^', include('file.url')),
+  File "/usr/local/lib/python2.7/dist-packages/django/conf/urls/__init__.py", line 52, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/root/dongnaoApi/file/url.py", line 3, in <module>
+    import views
+  File "/root/dongnaoApi/file/views.py", line 30
+    <<<<<<< HEAD
+     ^
+SyntaxError: invalid syntax
+/root/dongnaoApi/react1/url.py:10: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^react1/student/(?P<pk>[0-9]+)/$', views.StudentDetail.as_view(), name='student-detail'),
+
+/root/dongnaoApi/file/url.py:12: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^file/remove/$', views.remove),
+
