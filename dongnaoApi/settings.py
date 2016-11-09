@@ -128,6 +128,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+FILE_SYSTEM_DIR = '/home/student/static/'
+
+STATIC_ROOT = 'collect_static'
+
+STATICFILES_DIRS = [
+    FILE_SYSTEM_DIR,
+]
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

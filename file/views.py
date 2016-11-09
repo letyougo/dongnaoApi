@@ -4,24 +4,31 @@ from django.shortcuts import render
 
 from django.http.response import HttpResponse,JsonResponse
 
-from dongnaoApi.settings import FILE_ROOT
+from dongnaoApi.settings import FILE_ROOT,FILE_SYSTEM_DIR
 import os
 import shutil
 
 
+def filter(path):
+    if path == '':
+       path = '/'
+    if path[0] == '/':
+	path = path[1:]
+    return os.path.join(FILE_SYSTEM_DIR,path)
 
 
 def get(request):
     path = request.GET['path']
-    info = os.listdir(path)
+    p = filter(path)	
+    info = os.listdir(p)
 
     json = []
     for i in info:
         d = {}
         d['path'] = os.path.join(path,i)
         d['name'] = i
-        d['ext'] = os.path.splitext(i)[0]
-        d['isFolder'] = os.path.isdir(d['path'])
+        d['ext'] = os.path.splitext(i)[1]
+        d['isFolder'] = os.path.isdir(filter(d['path']))
         json.append(d)
 
     return JsonResponse(dict(
@@ -31,6 +38,7 @@ def get(request):
 
 def rename(request):
     path = request.GET['path']
+    path = filter(path)
     base = os.path.dirname(path)
     name = request.GET['name']
     if not os.path.exists(path):
@@ -39,17 +47,19 @@ def rename(request):
         ))
 
     dist = os.path.join(base,name)
-    print dist
     os.rename(path,dist)
 
-
+    
     return JsonResponse(dict(
-        path=dist,
-        name=name
+        path=dist.replace('/home/student/static/',''),
+	name=name,
+	ext=os.path.splitext(name)[1],
+	isFolder=os.path.isdir(dist)
     ))
 
 def mkdir(request):
     path = request.GET['path']
+    path = filter(path)
     name = request.GET['name']
 
     dist = os.path.join(path,name)
@@ -60,12 +70,15 @@ def mkdir(request):
 
     os.mkdir(dist)
     return JsonResponse(dict(
-        path=dist,
-        name=name
+        path=dist.replace('/home/student/static/',''),
+	name=name,
+	ext=os.path.splitext(name)[1],
+	isFolder=os.path.isdir(dist)
     ))
 
 def remove(request):
     path = request.GET['path']
+    path = filter(path)
     if not os.path.exists(path):
         return JsonResponse(dict(
             error='file not exist'

@@ -12,15 +12,21 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-from django.conf.urls import url
-from django.contrib import admin
-from django.conf.urls import url,include
 
+"""
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
+from django.conf.urls import url,include
+from django.contrib import admin
 from rest_framework import routers
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('react1.url')),
     url(r'^', include('file.url')),
 ]
+# + static('/static/', document_root=settings.FILE_SYSTEM_DIR)
+
+
+
