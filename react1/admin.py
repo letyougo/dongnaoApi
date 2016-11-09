@@ -4,6 +4,6 @@ from django.contrib import admin
 from react1.models import *
 
 class StudentDesc(admin.ModelAdmin):
-    list_display = ('id','name','age','sex','single')
+    list_display = ('id','name','age','sex','score','single')
 
 admin.site.register(Student,StudentDesc)

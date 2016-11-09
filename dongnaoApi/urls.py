@@ -20,9 +20,10 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from rest_framework import routers
 from django.conf import settings
-
+from appcenter.views import home
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^home$', home ),
     url(r'^', include('react1.url')),
     url(r'^', include('file.url')),
 ]

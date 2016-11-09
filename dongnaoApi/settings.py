@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'react1',
+    'appcenter',
     'rest_framework_swagger',
     'corsheaders',
     'rest_framework'
