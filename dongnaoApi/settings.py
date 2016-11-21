@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'react1',
     'appcenter',
+    'deploy',
     'rest_framework_swagger',
     'corsheaders',
     'rest_framework'
@@ -149,7 +150,10 @@ REST_FRAMEWORK = {
     ),
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^http://localhost:(\d+)',
+    r'^http://10\.232\.38\.23:9527',
+)
 
 CORS_ALLOW_METHODS = (
     'DELETE',

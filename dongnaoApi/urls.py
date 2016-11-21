@@ -23,9 +23,10 @@ from django.conf import settings
 from appcenter.views import home
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^home$', home ),
+    url(r'^home$', home),
     url(r'^', include('react1.url')),
     url(r'^', include('file.url')),
+    url(r'^', include('deploy.url')),
 ]
 # + static('/static/', document_root=settings.FILE_SYSTEM_DIR)
 
