@@ -1,10 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>动脑学院</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei";
+        }
+        
+        ul {
+            list-style: none;
+        }
+				a{
+					text-decoration:none;
+					color:#9d9d9d
+				}        
+				a:hover{
+					color:#00b3ee	
+				}
+        .main {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: auto;
+        }
+        
+        .container p {
+            font-size: 14px;
+        }
+        
+        .head {
+            background: url("/static/homepage/img/16pic_304394_b.jpg") no-repeat;
+            color: #fff;
+            height: 160px;
+        }
+        
+        .head h1 {
+            text-align: center;
+            height: 90px;
+            line-height: 90px;
+        }
+        
+        .head span {
+            position: relative;
+            display: inline-block;
+            margin: 2px;
+        }
+        
+        .head p {
+            text-align: center;
+						font-size:14px;
+				}
+        
+        .container {}
+        
+        .homework ul {
+            width: 100%;
+        }
+        
+        .homework ul:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        
+        .homework ul li {
+            width: 150px;
+            height: 150px;
+            float: left;
+            margin: 20px;
+						font-size:14px;
+						text-align: center;
+        }
+				.homework ul li >a{
+						display:block;
+						width:100px;
+						height:100px;
+						margin:0 auto;
+						transition:.3s;
+						border-radius:50%;
+						overflow:hidden;
+						font-size:14px;
+				}
+				.homework ul li >a{
+						display:block
+				}
+				.homework ul li >a:hover{
+						transform:rotate(30deg) scale(1.1);
+				}
+    </style>
+    <script src="/static/homepage/javascript/TweenMax.min.js"></script>
+    <script src="/static/homepage/javascript/jquery.min.js"></script>
 </head>
-<body>
+<!--<body>
 <h3>React第一期学生作业情况</h3>
 <ul>
     {% for a in app %}
@@ -14,7 +117,95 @@
             <p>{{ a.description }}</p>
         </li>
     {% endfor %}
-</ul>
 
+
+</ul>-->
+<div class="main">
+    <div class="head">
+        <h1><span>动</span><span>脑</span><span>学</span><span>院</span><span>R</span><span>E</span><span>A</span><span>C</span><span>T</span><span>专</span><span>题</span><span>学</span><span>习</span><span>班</span></h1>
+        <p>
+            <span>讲</span>
+            <span>师</span>
+            <span>：</span>
+            <span>R</span>
+            <span>y</span>
+            <span>a</span>
+            <span>n</span></p>
+    </div>
+    <div class="container">
+
+        <div class="body">
+            <div class="homework">
+                <ul>
+                    <!--<li>
+                        <a href="#"><img src="/static/homepage/img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/7dc3aac5c0244a11ab315d177d1292ed.jpg" alt=""></a>
+                        <p>云盘</p>
+                        <p>xxx</p>
+                        <p>xxx做的云盘</p>
+                    </li>-->
+                    {% for a in app %}
+                    <li>
+								
+										
+										<a href="{{ a.url }}"><img src={{a.student.logo}} alt="" width=100 height=100></a>
+                        <p>{{ a.student.name }}</p>
+												<p><a href="{{ a.url }}">{{a.description}}</a></p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script>
+window.onload=function(){
+    var t = new TimelineMax();
+    var word = $(".head h1 span");
+    t.staggerFrom(word, 0.3, { alpha: 0 }, 0.06, "word");
+    t.staggerFrom(word, 1, { rotationY: "-270deg", y: "80px", transformOrigin: "50% 50% -80", ease: Back.easeOut }, 0.06, "word");
+    t.staggerTo(word, 0.6, { rotationX: "360deg", color: "#90e500", transformOrigin: "50% 50% 10" }, 0.02);
+    var teacher =$(".head p span");
+    t.staggerFrom(teacher, 1, { y: "-60px", rotation: "-40deg", alpha: 0, scale: 2, ease: Back.easeInOut }, 0.1);
+
+    var c = new TimelineMax();
+    var lis = $(".container ul li");
+    c.from(lis,1,{scale:0,ease:Power2.easeOut});
+}
+        
+</script>
 </body>
+
 </html>

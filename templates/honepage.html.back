@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>React第一期学生作业情况</h3>
+<ul>
+    {% for a in app %}
+        <li>
+            <p>{{ a.student.name }}</p>
+            <p><a href="{{ a.url }}">{{ a.url}}</a></p>
+            <p>{{ a.description }}</p>
+        </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
