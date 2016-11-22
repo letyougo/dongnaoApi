@@ -56,6 +56,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'deploy.middleware.LoginMiddleware'
 ]
 
 ROOT_URLCONF = 'dongnaoApi.urls'
@@ -163,5 +164,6 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
+
 
 FILE_ROOT = '/'

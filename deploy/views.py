@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rest_framework import generics,permissions
 from models import User,Project
 from serializers import UserSerializer,ProjectSerializer
-
+from django.http.response import JsonResponse
 from rest_framework.response import Response
 
 from rest_framework.decorators import detail_route
@@ -35,5 +35,19 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectSerializer
 
 def login(request):
+    name = request.GET['name']
+    password = request.GET['password']
+    query = User.objects.filter(name=name,password=password)
+    if len(query) == 0:
+        return Response({'error':'user not find'})
+    else:
+        request.session['user_id'] = query[0].id
 
-    pass
+    return JsonResponse({'login':query[0].id})
+
+def logout(request):
+    try:
+        del request.session['member_id']
+    except KeyError:
+        pass
+    return JsonResponse("You're logged out.")
