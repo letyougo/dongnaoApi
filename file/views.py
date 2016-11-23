@@ -9,6 +9,9 @@ from dongnaoApi.settings import FILE_ROOT,FILE_SYSTEM_DIR
 import os
 import shutil
 
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
     
 def filter(path):
    if not path:
