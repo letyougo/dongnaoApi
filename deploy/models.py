@@ -10,6 +10,13 @@ class User(models.Model):
     folder = models.CharField(max_length=32)
     logo = models.CharField(max_length=128,null=True,blank=True)
 
+    def to_obj(self):
+        return dict(
+            name = self.name,
+            folder = self.folder,
+            logo = self.logo
+
+        )
     def __unicode__(self):
         return self.name
 
@@ -20,6 +27,14 @@ class Project(models.Model):
     admin = models.ForeignKey(User)
     logo = models.CharField(max_length=128,null=True,blank=True)
 
+    def to_obj(self):
+        return dict(
+            name = self.name,
+            description = self.description,
+            url = self.url,
+            admin = self.admin.to_obj(),
+            logo = self.logo
+        )
     def __unicode__(self):
         return self.name
 

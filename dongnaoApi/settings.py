@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE_CLASSES = [
 #    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
 
     ),
 }
-
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_REGEX_WHITELIST = (
     r'^http://localhost:(\d+)',
     r'^http://10\.232\.38\.23:9527',
@@ -165,5 +165,9 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 
+LOGIN_CHECK = [
+    '/deploy/user/',
+    '/deploy/myproject/'
+]
 
 FILE_ROOT = '/'

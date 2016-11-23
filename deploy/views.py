@@ -39,15 +39,32 @@ def login(request):
     password = request.GET['password']
     query = User.objects.filter(name=name,password=password)
     if len(query) == 0:
-        return Response({'error':'user not find'})
+        return JsonResponse({'info':'user not find'})
     else:
-        request.session['user_id'] = query[0].id
-
-    return JsonResponse({'login':query[0].id})
+        print 'set cookie'
+        response = JsonResponse({'info':query[0].name + ' login'})
+        response.set_cookie('user',query[0].id)
+    return response
 
 def logout(request):
-    try:
-        del request.session['member_id']
-    except KeyError:
-        pass
-    return JsonResponse("You're logged out.")
+    response = JsonResponse(dict(
+        info="You're logged out."
+    ))
+    response.delete_cookie('user')
+    return response
+
+
+def create(request):
+    user_id = request.COOKIES['user']
+    url = request.GET['url']
+    user = User.objects.get(user_id)
+    return JsonResponse(dict(name=user.name,url=url))
+
+def myproject(request):
+    user_id = int(request.COOKIES['user'])
+    print user_id,'cookies'
+    user = User.objects.get(id=user_id)
+    project = user.project_set.all()
+    return JsonResponse(dict(
+        project = [p.to_obj() for p in project]
+    ))
