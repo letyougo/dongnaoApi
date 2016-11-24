@@ -162,7 +162,7 @@ def upload(request):
     for f in files:
         print f   
         
-        target = open(p+f.name,'wb+')
+        target = open(p+'/'+f.name,'wb+')
         if f.multiple_chunks():
             for chunk in f.chunks():
                 target.write(chunk)
