@@ -26,7 +26,7 @@ class Project(models.Model):
     url = models.CharField(max_length=128,default='')
     admin = models.ForeignKey(User)
     logo = models.CharField(max_length=128,null=True,blank=True)
-
+    deploy = models.CharField(max_length=128,default='build')
     def to_obj(self):
         return dict(
             name = self.name,
