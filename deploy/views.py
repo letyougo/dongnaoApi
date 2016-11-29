@@ -75,13 +75,109 @@ def myproject(request):
         project = [p.to_obj() for p in project]
     ))
 
+base_path = os.path.join(BASE_DIR,'deploy','temp-user-projects')
+
 def sync(request):
     query = User.objects.all()
-    path = os.path.join(BASE_DIR,'deploy','temp-user-projects') 
-    os.chdir(path)
+    os.chdir(base_path)
     for user in query:
         os.path.exists(user.folder) or os.mkdir(user.folder)
     return JsonResponse({'info':'create folders successful'})
     
+from distutils.dir_util import copy_tree,remove_tree
+from tools import Shell
+from gittle import Gittle
 
 
+def get_repo_info(repo_path):
+    if not os.path.exists(repo_path):
+        return dict(
+            info=[],
+            error=True,
+            msg='repo not exist'
+        )
+
+    git_path = os.path.join(repo_path, '.git')
+    if not os.path.exists(git_path):
+        return dict(
+            info=[],
+            error=True,
+            msg='.git file lost'
+        )
+
+    repo = Gittle(repo_path)
+    list_dir = os.listdir(repo_path)
+    folders = []
+    print list_dir
+    for i in range(len(list_dir)):
+        if os.path.isdir(os.path.join(repo_path, list_dir[i])):
+            folders.append(list_dir[i])
+
+    return dict(
+        commit_info=repo.commit_info(start=0),
+        remote_branches=repo.remote_branches,
+        local_branches=repo.branches,
+        active_branch=repo.active_branch,
+        folders=folders,
+    )
+
+def clone(request):
+    user_id = int(request.COOKIES['user'])
+    folder = User.objects.get(id=user_id).folder
+    my_path = os.path.join(base_path,folder)
+    os.chdir(my_path)
+    url = request.GET['url']
+    name = request.GET['name']
+    repo_path = os.path.join(my_path,name)
+    if os.path.exists(repo_path):
+        return remove_tree(repo_path)
+
+    shell = Shell()
+    print 'git clone ' + url + ' ' + name
+    shell.run('git clone ' + url + ' ' + name)
+
+
+    result = get_repo_info(repo_path)
+    print result
+    return JsonResponse(result)
+
+def detail(request):
+    user_id = int(request.COOKIES['user'])
+    folder = User.objects.get(id=user_id).folder
+    name = request.GET['name']
+    repo_path = os.path.join(base_path,folder,name)
+
+    result = get_repo_info(repo_path)
+    return JsonResponse(result)
+
+
+def branch(request):
+    user_id = int(request.COOKIES['user'])
+    folder = User.objects.get(id=user_id).folder
+    name = request.GET['name']
+    repo_path = os.path.join(base_path, folder, name)
+    os.chdir(repo_path)
+
+    shell = Shell()
+    shell.run('git checkout -b'+request.GET['branch'])
+    shell.run('git pull origin '+request.GET['branch'])
+
+    return JsonResponse(dict(
+        info=shell.info,
+        err=shell.err
+    ), safe=False)
+
+def reset(request):
+    user_id = int(request.COOKIES['user'])
+    folder = User.objects.get(id=user_id).folder
+    name = request.GET['name']
+    repo_path = os.path.join(base_path, folder, name)
+    os.chdir(repo_path)
+
+    shell = Shell()
+    shell.run('git reset --hard '+request.GET['sha'])
+
+    return JsonResponse(dict(
+        info=shell.info,
+        err=shell.err
+    ), safe=False)

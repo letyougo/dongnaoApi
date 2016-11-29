@@ -16,6 +16,11 @@ urlpatterns = patterns('',
     url(r'^deploy/create', views.create, name='deploy-create'),
     url(r'^deploy/myproject', views.myproject, name='deploy-create'),
     url(r'^deploy/sync', views.sync, name='deploy-sync'),
+    url(r'^deploy/clone', views.clone, name='deploy-clone'),
+    url(r'^deploy/detail', views.detail, name='deploy-detail'),
+    url(r'^deploy/branch', views.detail, name='deploy-detail'),
+    url(r'^deploy/reset', views.detail, name='deploy-detail'),
+
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
