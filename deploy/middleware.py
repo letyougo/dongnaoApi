@@ -21,7 +21,8 @@ class LoginMiddleware(object):
                 return None
             else:
                 return JsonResponse(dict(
-                    error='please login'
+                    error='please login',
+                    noLogin= True
                 ))
         else:
             return None

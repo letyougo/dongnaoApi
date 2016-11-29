@@ -10,7 +10,8 @@ from django.http.response import JsonResponse
 from rest_framework.response import Response
 
 from rest_framework.decorators import detail_route
-
+from dongnaoApi.settings import BASE_DIR
+import os
 class UserList(generics.ListCreateAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = User.objects.all()
@@ -57,7 +58,12 @@ def logout(request):
 def create(request):
     user_id = request.COOKIES['user']
     url = request.GET['url']
-    user = User.objects.get(user_id)
+    name = request.GET['name']
+    description = request.GET['description'] if 'description' in  request.GET else 'description'
+    logo = request.GET['logo'] if 'logo' in request.GET else 'logo'
+    user = User.objects.get(id=user_id)
+    Project.objects.create(name=name,description=description,logo=logo,url=url,admin=user)
+
     return JsonResponse(dict(name=user.name,url=url))
 
 def myproject(request):
@@ -68,3 +74,14 @@ def myproject(request):
     return JsonResponse(dict(
         project = [p.to_obj() for p in project]
     ))
+
+def sync(request):
+    query = User.objects.all()
+    path = os.path.join(BASE_DIR,'deploy','temp-user-projects') 
+    os.chdir(path)
+    for user in query:
+        os.path.exists(user.folder) or os.mkdir(user.folder)
+    return JsonResponse({'info':'create folders successful'})
+    
+
+

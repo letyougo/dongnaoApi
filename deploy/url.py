@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^deploy/logout', views.logout,name='deploy-logout'),
     url(r'^deploy/create', views.create, name='deploy-create'),
     url(r'^deploy/myproject', views.myproject, name='deploy-create'),
+    url(r'^deploy/sync', views.sync, name='deploy-sync'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

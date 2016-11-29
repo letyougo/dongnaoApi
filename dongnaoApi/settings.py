@@ -167,7 +167,10 @@ CORS_ALLOW_METHODS = (
 
 LOGIN_CHECK = [
     '/deploy/user/',
-    '/deploy/myproject/'
-]
+    '/deploy/myproject/',
+    '/deploy/project/',
+    '/deploy/create/'
+   ] 
+
 
 FILE_ROOT = '/'
