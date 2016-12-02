@@ -169,6 +169,7 @@ LOGIN_CHECK = [
     '/deploy/user/',
     '/deploy/myproject/',
     '/deploy/project/',
+    '/deploy/init/',
     '/deploy/create/'
    ] 
 

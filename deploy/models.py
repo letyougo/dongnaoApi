@@ -14,8 +14,8 @@ class User(models.Model):
         return dict(
             name = self.name,
             folder = self.folder,
-            logo = self.logo
-
+            logo = self.logo,
+            id = self.id            
         )
     def __unicode__(self):
         return self.name
@@ -35,6 +35,15 @@ class Project(models.Model):
             admin = self.admin.to_obj(),
             logo = self.logo
         )
+    def to_obj2(self):
+        return dict(
+            name = self.name,
+            description = self.description,
+            url = self.url,
+            logo = self.logo,
+            id = self.id
+        )
+
     def __unicode__(self):
         return self.name
 

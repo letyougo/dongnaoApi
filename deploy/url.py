@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^deploy/detail', views.detail, name='deploy-detail'),
     url(r'^deploy/branch', views.detail, name='deploy-detail'),
     url(r'^deploy/reset', views.detail, name='deploy-detail'),
+    url(r'^deploy/init', views.init, name='deploy-detail'),
+    url(r'^deploy/repo', views.repo, name='deploy-detail'),
 
 )
 

@@ -21,12 +21,16 @@ from django.contrib import admin
 from rest_framework import routers
 from django.conf import settings
 from appcenter.views import home
+from rest_framework_swagger.views import get_swagger_view
+schema_view = get_swagger_view(title='Pastebin API')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home$', home),
     url(r'^', include('react1.url')),
     url(r'^', include('file.url')),
     url(r'^', include('deploy.url')),
+    url(r'^$', schema_view),
+    url(r'^api$', schema_view)
 ]
 # + static('/static/', document_root=settings.FILE_SYSTEM_DIR)
 

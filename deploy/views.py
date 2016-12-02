@@ -40,12 +40,24 @@ def login(request):
     password = request.GET['password']
     query = User.objects.filter(name=name,password=password)
     if len(query) == 0:
-        return JsonResponse({'info':'user not find'})
+        return JsonResponse({'info':'user not find','noLogin':True})
     else:
         print 'set cookie'
-        response = JsonResponse({'info':query[0].name + ' login'})
+        response = JsonResponse({'info':query[0].name + ' login','noLogin':False})
         response.set_cookie('user',query[0].id)
     return response
+
+def init(request):
+    user_id = request.COOKIES['user']
+    user = User.objects.get(id=user_id)
+    users = User.objects.all()  
+    return JsonResponse(
+            dict(
+                info=user.to_obj(),
+                project=[p.to_obj2() for p in  user.project_set.all()],
+                users = [u.to_obj() for u in users]
+            )    
+        )
 
 def logout(request):
     response = JsonResponse(dict(
@@ -121,6 +133,16 @@ def get_repo_info(repo_path):
         folders=folders,
     )
 
+def repo(request):
+    id = request.get['repo_id']
+    project = Project.objects.get(id=id)
+    repo_name = project.name
+    user_name = project.admin.name
+    path = os.join(base_dir,user_name,repo_name)
+    result = get_repo_info(path)
+    return JsonRespons(result)
+
+
 def clone(request):
     user_id = int(request.COOKIES['user'])
     folder = User.objects.get(id=user_id).folder
@@ -135,7 +157,7 @@ def clone(request):
     shell = Shell()
     print 'git clone ' + url + ' ' + name
     shell.run('git clone ' + url + ' ' + name)
-
+    print 'git clone over'
 
     result = get_repo_info(repo_path)
     print result
