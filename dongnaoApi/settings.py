@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'deploy',
     'rest_framework_swagger',
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    'django.contrib.admindocs'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -170,7 +171,11 @@ LOGIN_CHECK = [
     '/deploy/myproject/',
     '/deploy/project/',
     '/deploy/init/',
-    '/deploy/create/'
+    '/deploy/create/',
+    '/deploy/clone/',
+    '/deploy/reset/'
+    '/deploy/branch/'
+    '/deploy/detail/'
    ] 
 
 

@@ -44,7 +44,7 @@ def login(request):
     else:
         print 'set cookie'
         response = JsonResponse({'info':query[0].name + ' login','noLogin':False})
-        response.set_cookie('user',query[0].id)
+        response.set_cookie('user',query[0].id,3600)
     return response
 
 def init(request):
@@ -67,16 +67,6 @@ def logout(request):
     return response
 
 
-def create(request):
-    user_id = request.COOKIES['user']
-    url = request.GET['url']
-    name = request.GET['name']
-    description = request.GET['description'] if 'description' in  request.GET else 'description'
-    logo = request.GET['logo'] if 'logo' in request.GET else 'logo'
-    user = User.objects.get(id=user_id)
-    Project.objects.create(name=name,description=description,logo=logo,url=url,admin=user)
-
-    return JsonResponse(dict(name=user.name,url=url))
 
 def myproject(request):
     user_id = int(request.COOKIES['user'])
@@ -101,7 +91,7 @@ from tools import Shell
 from gittle import Gittle
 
 
-def get_repo_info(repo_path):
+def get_repo_info(repo_path,is_my_repo):
     if not os.path.exists(repo_path):
         return dict(
             info=[],
@@ -131,25 +121,37 @@ def get_repo_info(repo_path):
         local_branches=repo.branches,
         active_branch=repo.active_branch,
         folders=folders,
+        is_my_repo=is_my_repo
     )
 
-def repo(request):
-    id = request.get['repo_id']
-    project = Project.objects.get(id=id)
-    repo_name = project.name
-    user_name = project.admin.name
-    path = os.join(base_dir,user_name,repo_name)
-    result = get_repo_info(path)
-    return JsonRespons(result)
+
 
 
 def clone(request):
     user_id = int(request.COOKIES['user'])
-    folder = User.objects.get(id=user_id).folder
-    my_path = os.path.join(base_path,folder)
-    os.chdir(my_path)
+    user = User.objects.get(id=user_id)
+    folder = user.folder
+
     url = request.GET['url']
     name = request.GET['name']
+    description = request.GET['description'] if 'description' in request.GET else 'description'
+    logo = request.GET['logo'] if 'logo' in request.GET else 'logo'
+
+    project = Project.objects.filter(name=name)
+    if len(project)==0:
+        Project.objects.create(name=name, description=description, logo=logo, url=url, admin=user)
+    else:
+        pro = project[0]
+        pro.name = name
+        pro.description = description
+        pro.logo = logo
+        pro.url = url
+        pro.admin = user
+        pro.save()
+
+    my_path = os.path.join(base_path,folder)
+    os.chdir(my_path)
+
     repo_path = os.path.join(my_path,name)
     if os.path.exists(repo_path):
         return remove_tree(repo_path)
@@ -159,24 +161,50 @@ def clone(request):
     shell.run('git clone ' + url + ' ' + name)
     print 'git clone over'
 
-    result = get_repo_info(repo_path)
-    print result
+    result = get_repo_info(repo_path,True)
+    result['name'] = name
+    result['description'] = description
+    result['logo'] = logo
+    result['url'] = url
+    result['admin'] = user.to_obj()
+
     return JsonResponse(result)
 
 def detail(request):
     user_id = int(request.COOKIES['user'])
     folder = User.objects.get(id=user_id).folder
-    name = request.GET['name']
-    repo_path = os.path.join(base_path,folder,name)
+    repo_id = request.GET['repo_id']
+    repo = Project.objects.get(id=repo_id)
 
-    result = get_repo_info(repo_path)
+    is_my_repo = user_id == repo.admin.id
+
+
+    repo_path = os.path.join(base_path,repo.admin.folder,repo.name)
+
+    result = get_repo_info(repo_path,is_my_repo)
+    result['name'] = repo.name
+    result['description'] = repo.description
+    result['logo'] = repo.logo
+    result['url'] = repo.url
+    result['admin'] = repo.admin.to_obj()
     return JsonResponse(result)
 
 
 def branch(request):
+
+    repo = Project.objects.get(id=request.GET['repo_id'])
     user_id = int(request.COOKIES['user'])
-    folder = User.objects.get(id=user_id).folder
-    name = request.GET['name']
+    user = User.objects.get(id=user_id)
+    if int(repo.admin.id) != user_id:
+        return JsonResponse(dict(
+            action=False,
+            info='you are not the owner of this repo'
+        ))
+
+
+
+    folder = user.folder
+    name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     os.chdir(repo_path)
 
@@ -190,11 +218,18 @@ def branch(request):
     ), safe=False)
 
 def reset(request):
+    repo = Project.objects.get(id=request.GET['repo_id'])
     user_id = int(request.COOKIES['user'])
+    user = User.objects.get(id=user_id)
     folder = User.objects.get(id=user_id).folder
-    name = request.GET['name']
+    name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     os.chdir(repo_path)
+    if int(repo.admin.id) != user_id:
+        return JsonResponse(dict(
+            action=False,
+            info='you are not the owner of this repo'
+        ))
 
     shell = Shell()
     shell.run('git reset --hard '+request.GET['sha'])
