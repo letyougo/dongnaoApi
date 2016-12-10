@@ -155,6 +155,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_REGEX_WHITELIST = (
     r'^http://localhost:(\d+)',
     r'^http://10\.232\.38\.23:9527',
+    r'^http://www\.mymanna\.me',
+    
 )
 
 CORS_ALLOW_METHODS = (
@@ -173,8 +175,11 @@ LOGIN_CHECK = [
     '/deploy/init/',
     '/deploy/create/',
     '/deploy/clone/',
-    '/deploy/reset/'
-    '/deploy/branch/'
+    '/deploy/reset/',
+    '/deploy/pull/',
+    '/deploy/checkout/',
+    '/deploy/editDeploy/',
+    '/deploy/branch/',
     '/deploy/detail/'
    ] 
 
