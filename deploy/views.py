@@ -10,7 +10,7 @@ from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from rest_framework import generics,permissions
 from models import User,Project
 from serializers import UserSerializer,ProjectSerializer
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse,HttpResponse
 from rest_framework.response import Response
 
 from rest_framework.decorators import detail_route
@@ -18,7 +18,7 @@ from dongnaoApi.settings import BASE_DIR
 import os
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import response, schemas
-
+import requests
 
 def schema_view(request):
     generator = schemas.SchemaGenerator(title='Pastebin API')
@@ -60,6 +60,7 @@ def login(request):
         response = JsonResponse({'info':query[0].name + ' login','noLogin':False})
         response.set_cookie('user',query[0].id,3600)
     return response
+
 
 def init(request):
     user_id = request.COOKIES['user']
@@ -202,6 +203,10 @@ def detail(request):
     result['deploy']=repo.deploy
     return JsonResponse(result)
 
+def page(request):
+    r = requests.get('http://www.baidu.com')
+    return HttpResponse(r.text)
+
 def branch(request):
 
     repo = Project.objects.get(id=request.GET['repo_id'])
@@ -279,6 +284,7 @@ def pull(request):
     r = get_repo_info(repo_path,True)
     
     shell = Shell()
+    shell.run('git fetch')
     shell.run('git pull origin '+r['active_branch'])
     result = get_repo_info(repo_path,True)
     result['msg1'] = shell.info
@@ -370,6 +376,7 @@ def deploy(request):
     
     if os.path.exists(online_path):
         remove_tree(online_path)
+        remove_tree(deploy_path,os.path.join(online_path,repo.deploy))
     copy_tree(deploy_path,os.path.join(online_path,repo.deploy))
     
     return JsonResponse({'action':'successful',online_path:online_path}, safe=False)

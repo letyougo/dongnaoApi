@@ -152,11 +152,14 @@ REST_FRAMEWORK = {
     ),
 }
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_MODEL = 'deploy.CrossDomain'
 CORS_ORIGIN_REGEX_WHITELIST = (
     r'^http://localhost:(\d+)',
     r'^http://10\.232\.38\.23:9527',
     r'^http://www\.mymanna\.me',
-    
+    r'^http://dicklwm\.coding\.me',
+        
 )
 
 CORS_ALLOW_METHODS = (

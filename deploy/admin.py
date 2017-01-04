@@ -11,3 +11,4 @@ class ProjectDesc(admin.ModelAdmin):
 
 admin.site.register(User,UsertDesc)
 admin.site.register(Project,ProjectDesc)
+admin.site.register(CrossDomain)

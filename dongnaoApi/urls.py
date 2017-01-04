@@ -31,8 +31,6 @@ urlpatterns = [
     url(r'^', include('file.url')),
     url(r'^', include('deploy.url')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^$', schema_view),
-    url(r'^api$', schema_view)
 ]
 # + static('/static/', document_root=settings.FILE_SYSTEM_DIR)
 

@@ -4,6 +4,12 @@ from django.db import models
 
 # Create your models here.
 
+class CrossDomain(models.Model):
+    cors = models.CharField(max_length=128)
+    def __unicode__(self):
+        return self.cors
+
+
 class User(models.Model):
     name = models.CharField(max_length=32)
     password = models.CharField(max_length=64)

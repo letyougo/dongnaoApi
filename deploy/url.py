@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^deploy/init', views.init, name='deploy-detail'),
     url(r'^deploy/editDeploy', views.editDeploy, name='deploy-detail'),
     url(r'^deploy/deploy', views.deploy, name='deploy-detail'),
+    url(r'^deploy/page', views.page, name='deploy-detail'),
 
 )
 
