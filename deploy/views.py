@@ -2,21 +2,18 @@ from django.shortcuts import render
 
 
 
-# Create your views here.
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 
-from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
+
+
 from rest_framework import generics,permissions
 from models import User,Project
 from serializers import UserSerializer,ProjectSerializer
 from django.http.response import JsonResponse
-from rest_framework.response import Response
 
-from rest_framework.decorators import detail_route
 from dongnaoApi.settings import BASE_DIR
 import os
-from rest_framework.decorators import api_view, renderer_classes
+
 from rest_framework import response, schemas
 
 
