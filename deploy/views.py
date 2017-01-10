@@ -48,7 +48,7 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-
+base_path = os.path.join(BASE_DIR,'deploy','temp-user-projects')
 def login(request):
     name = request.GET['name']
     password = request.GET['password']
@@ -58,17 +58,25 @@ def login(request):
     else:
         print 'set cookie'
         response = JsonResponse({'info':query[0].name + ' login','noLogin':False})
-        response.set_cookie('user',query[0].id,3600)
+        response.set_cookie('user',query[0].id,3600*24*7)
     return response
 
 def init(request):
     user_id = request.COOKIES['user']
     user = User.objects.get(id=user_id)
-    users = User.objects.all()  
+    users = User.objects.all()
+
+    user_path = os.path.join(base_path,user.name)
+    user_path_exist = os.path.exists(user_path)
+
+    if not user_path_exist:
+        os.mkdir(user_path)
+
+
     return JsonResponse(
             dict(
                 info=user.to_obj(),
-                project=[p.to_obj2() for p in  user.project_set.all()],
+                project=[p.to_obj2() for p in user.project_set.all()],
                 users = [u.to_obj() for u in users]
             )    
         )
@@ -90,7 +98,7 @@ def myproject(request):
         project = [p.to_obj() for p in project]
     ))
 
-base_path = os.path.join(BASE_DIR,'deploy','temp-user-projects')
+
 
 
 def sync(request):
@@ -373,3 +381,27 @@ def deploy(request):
     copy_tree(deploy_path,os.path.join(online_path,repo.deploy))
     
     return JsonResponse({'action':'successful',online_path:online_path}, safe=False)
+
+def preview(request):
+    repo = Project.objects.get(id=request.GET['repo_id'])
+    user_id = int(request.COOKIES['user'])
+
+    repo_path = os.path.join(base_path,repo.admin.name,repo.name)
+    deploy = repo.deploy
+
+    def getIndex(repo_path, depoly):
+
+        for d in depoly.split(','):
+            dir = os.path.join(repo_path, d)
+            for root, sub_dirs, files in os.walk(dir):
+                print root, files
+                if 'index.html' in files:
+                    return os.path.join(root, 'index.html')
+
+        return os.path.join(repo_path, depoly.split(',')[0], 'index.html')
+
+    path = getIndex(repo_path, deploy) or 'error'
+    path = path.replace(base_path,'')
+
+
+    return JsonResponse(dict(deploy=repo.deploy,path=path,static='static'))

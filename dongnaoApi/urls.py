@@ -14,25 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 
 """
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
+
 from django.conf.urls import url,include
 from django.contrib import admin
-from rest_framework import routers
-from django.conf import settings
+
 from appcenter.views import home
-from rest_framework_swagger.views import get_swagger_view
-from deploy.views import schema_view
+
+
 
 urlpatterns = [
+    url(r'^$', home),
+    url(r'^home$', home),
     url(r'^admin/', admin.site.urls),
     url(r'^home$', home),
     url(r'^', include('react1.url')),
     url(r'^', include('file.url')),
     url(r'^', include('deploy.url')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^$', schema_view),
-    url(r'^api$', schema_view)
+
 ]
 # + static('/static/', document_root=settings.FILE_SYSTEM_DIR)
 

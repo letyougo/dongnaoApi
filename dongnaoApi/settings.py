@@ -132,13 +132,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-FILE_SYSTEM_DIR = '/home/student/static/'
+FILE_SYSTEM_DIR = os.path.join(BASE_DIR,'deploy','temp-user-projects')
 
 STATIC_ROOT = 'collect_static'
 
 STATICFILES_DIRS = [
     FILE_SYSTEM_DIR,
 ]
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
