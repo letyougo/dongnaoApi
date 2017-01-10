@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'react1',
     'appcenter',
     'deploy',
-    'rest_framework_swagger',
     'corsheaders',
     'rest_framework',
     'django.contrib.admindocs'
