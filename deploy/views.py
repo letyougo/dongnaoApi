@@ -381,7 +381,7 @@ def deploy(request):
     name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     deploy_path = os.path.join(repo_path,repo.deploy)
-    online_path = os.path.join('/home/work/www/cdn/secStatic/groups',team['name'],user.name,folder,name)
+    online_path = os.path.join('/home/work/www/cdn/secStatic/groups',team['name'],folder,name)
 
     remove_files=[]
     shell = Shell()
