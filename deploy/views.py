@@ -375,13 +375,13 @@ def deploy(request):
     if content.has_key('error'):
         return JsonResponse(dict(error='user is not a menber of miui'))
 
-    team = content.team
+    team = content['team']
 
     folder = User.objects.get(id=user_id).folder
     name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     deploy_path = os.path.join(repo_path,repo.deploy)
-    online_path = os.path.join('/home/work/www/cdn/secStatic/groups',team.name,user.name,folder,name)
+    online_path = os.path.join('/home/work/www/cdn/secStatic/groups',team['name'],user.name,folder,name)
 
     remove_files=[]
     shell = Shell()
