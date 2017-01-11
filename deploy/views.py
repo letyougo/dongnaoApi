@@ -372,7 +372,7 @@ def deploy(request):
 
     req = requests.get('http://kit.sec.xiaomi.srv/get_team_by_user/?name=' + user.name)
     content = req.json()
-    if content.error:
+    if content.has_key('error'):
         return JsonResponse(dict(error='user is not a menber of miui'))
 
     team = content.team
