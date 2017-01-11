@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^deploy/editDeploy', views.editDeploy, name='deploy-editDeploy'),
     url(r'^deploy/deploy', views.deploy, name='deploy-deploy'),
     url(r'^deploy/preview', views.preview, name='deploy-preview'),
+    url(r'^deploy/deleteProject', views.deleteProject, name='deploy-delete'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

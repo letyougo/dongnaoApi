@@ -415,3 +415,23 @@ def preview(request):
 
 
     return JsonResponse(dict(deploy=repo.deploy,path=path,static='static'))
+
+def deleteProject(request):
+    repo = Project.objects.get(id=request.GET['repo_id'])
+
+    user_id = int(request.COOKIES['user'])
+
+
+    if int(repo.admin.id)!=user_id:
+        return JsonResponse(dict(
+            action=False,
+            info='you are not the owner of this repo'
+        ))
+
+    repo_path = os.path.join(base_path, repo.admin.name, repo.name)
+    deploy = repo.deploy
+
+    repo.delete()
+    if os.path.exists(repo_path):
+        remove_tree(repo_path)
+    return JsonResponse(dict(deploy=repo.deploy, path=repo_path, static='static'))
