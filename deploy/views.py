@@ -13,7 +13,7 @@ from django.http.response import JsonResponse
 
 from dongnaoApi.settings import BASE_DIR
 import os
-
+import requests
 from rest_framework import response, schemas
 
 
@@ -355,20 +355,33 @@ def editDeploy(request):
 
 from distutils.dir_util import copy_tree,remove_tree
 def deploy(request):
+
+
+
     repo = Project.objects.get(id=request.GET['repo_id'])
     user_id = int(request.COOKIES['user'])
     user = User.objects.get(id=user_id)
-    
+
+
+
     if int(repo.admin.id)!=user.id:
         return JsonResponse(dict(
             action=False,
             info='you are not the owner of this repo'
         ))
+
+    req = requests.get('http://kit.sec.xiaomi.srv/get_team_by_user/?name=' + user.name)
+    content = req.json()
+    if content.error:
+        return JsonResponse(dict(error='user is not a menber of miui'))
+
+    team = content.team
+
     folder = User.objects.get(id=user_id).folder
     name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     deploy_path = os.path.join(repo_path,repo.deploy)
-    online_path = os.path.join('/home/student/static/',folder,name)
+    online_path = os.path.join('/home/work/www/cdn/secStatic/groups',team.name,user.name,folder,name)
 
     remove_files=[]
     shell = Shell()
