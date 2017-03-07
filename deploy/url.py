@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from rest_framework.urlpatterns import format_suffix_patterns
-import views
+import deploy.views as views
 
 
 
@@ -17,15 +17,15 @@ urlpatterns = patterns('',
     url(r'^deploy/sync', views.sync, name='deploy-sync'),
     url(r'^deploy/clone', views.clone, name='deploy-clone'),
     url(r'^deploy/detail', views.detail, name='deploy-detail'),
-    url(r'^deploy/branch', views.branch, name='deploy-detail'),
-    url(r'^deploy/checkout', views.checkout, name='deploy-detail'),
-    url(r'^deploy/pull', views.pull, name='deploy-detail'),
-    url(r'^deploy/reset', views.reset, name='deploy-detail'),
-    url(r'^deploy/init', views.init, name='deploy-detail'),
-    url(r'^deploy/editDeploy', views.editDeploy, name='deploy-detail'),
-    url(r'^deploy/deploy', views.deploy, name='deploy-detail'),
-    url(r'^deploy/page', views.page, name='deploy-detail'),
-
+    url(r'^deploy/branch', views.branch, name='deploy-branch'),
+    url(r'^deploy/checkout', views.checkout, name='deploy-checkout'),
+    url(r'^deploy/pull', views.pull, name='deploy-pull'),
+    url(r'^deploy/reset', views.reset, name='deploy-reset'),
+    url(r'^deploy/init', views.init, name='deploy-init'),
+    url(r'^deploy/editDeploy', views.editDeploy, name='deploy-editDeploy'),
+    url(r'^deploy/deploy', views.deploy, name='deploy-deploy'),
+    url(r'^deploy/preview', views.preview, name='deploy-preview'),
+    url(r'^deploy/deleteProject', views.deleteProject, name='deploy-delete'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

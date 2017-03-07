@@ -2,23 +2,20 @@ from django.shortcuts import render
 
 
 
-# Create your views here.
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 
-from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
+
+
 from rest_framework import generics,permissions
 from models import User,Project
 from serializers import UserSerializer,ProjectSerializer
-from django.http.response import JsonResponse,HttpResponse
-from rest_framework.response import Response
+from django.http.response import JsonResponse
 
-from rest_framework.decorators import detail_route
 from dongnaoApi.settings import BASE_DIR
 import os
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework import response, schemas
 import requests
+from rest_framework import response, schemas
+
 
 def schema_view(request):
     generator = schemas.SchemaGenerator(title='Pastebin API')
@@ -48,7 +45,7 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-
+base_path = os.path.join(BASE_DIR,'deploy','temp-user-projects')
 def login(request):
     name = request.GET['name']
     password = request.GET['password']
@@ -58,18 +55,25 @@ def login(request):
     else:
         print 'set cookie'
         response = JsonResponse({'info':query[0].name + ' login','noLogin':False})
-        response.set_cookie('user',query[0].id,3600)
+        response.set_cookie('user',query[0].id,3600*24*7)
     return response
-
 
 def init(request):
     user_id = request.COOKIES['user']
     user = User.objects.get(id=user_id)
-    users = User.objects.all()  
+    users = User.objects.all()
+
+    user_path = os.path.join(base_path,user.name)
+    user_path_exist = os.path.exists(user_path)
+
+    if not user_path_exist:
+        os.mkdir(user_path)
+
+
     return JsonResponse(
             dict(
                 info=user.to_obj(),
-                project=[p.to_obj2() for p in  user.project_set.all()],
+                project=[p.to_obj2() for p in user.project_set.all()],
                 users = [u.to_obj() for u in users]
             )    
         )
@@ -91,7 +95,7 @@ def myproject(request):
         project = [p.to_obj() for p in project]
     ))
 
-base_path = os.path.join(BASE_DIR,'deploy','temp-user-projects')
+
 
 
 def sync(request):
@@ -203,10 +207,6 @@ def detail(request):
     result['deploy']=repo.deploy
     return JsonResponse(result)
 
-def page(request):
-    r = requests.get('http://www.baidu.com')
-    return HttpResponse(r.text)
-
 def branch(request):
 
     repo = Project.objects.get(id=request.GET['repo_id'])
@@ -284,7 +284,6 @@ def pull(request):
     r = get_repo_info(repo_path,True)
     
     shell = Shell()
-    shell.run('git fetch')
     shell.run('git pull origin '+r['active_branch'])
     result = get_repo_info(repo_path,True)
     result['msg1'] = shell.info
@@ -356,27 +355,78 @@ def editDeploy(request):
 
 from distutils.dir_util import copy_tree,remove_tree
 def deploy(request):
+
+
+
     repo = Project.objects.get(id=request.GET['repo_id'])
     user_id = int(request.COOKIES['user'])
     user = User.objects.get(id=user_id)
-    
+
+
+
     if int(repo.admin.id)!=user.id:
         return JsonResponse(dict(
             action=False,
             info='you are not the owner of this repo'
         ))
+
+
+
     folder = User.objects.get(id=user_id).folder
     name = repo.name
     repo_path = os.path.join(base_path, folder, name)
     deploy_path = os.path.join(repo_path,repo.deploy)
-    online_path = os.path.join('/home/student/static/',folder,name)
+    online_path = os.path.join('/home/student/static',folder,name)
 
     remove_files=[]
     shell = Shell()
     
     if os.path.exists(online_path):
         remove_tree(online_path)
-        remove_tree(deploy_path,os.path.join(online_path,repo.deploy))
     copy_tree(deploy_path,os.path.join(online_path,repo.deploy))
     
     return JsonResponse({'action':'successful',online_path:online_path}, safe=False)
+
+def preview(request):
+    repo = Project.objects.get(id=request.GET['repo_id'])
+    user_id = int(request.COOKIES['user'])
+
+    repo_path = os.path.join(base_path,repo.admin.name,repo.name)
+    deploy = repo.deploy
+
+    def getIndex(repo_path, depoly):
+
+        for d in depoly.split(','):
+            dir = os.path.join(repo_path, d)
+            for root, sub_dirs, files in os.walk(dir):
+                print root, files
+                if 'index.html' in files:
+                    return os.path.join(root, 'index.html')
+
+        return os.path.join(repo_path, depoly.split(',')[0], 'index.html')
+
+    path = getIndex(repo_path, deploy) or 'error'
+    path = path.replace(base_path,'')
+
+
+    return JsonResponse(dict(deploy=repo.deploy,path=path,static='static'))
+
+def deleteProject(request):
+    repo = Project.objects.get(id=request.GET['repo_id'])
+
+    user_id = int(request.COOKIES['user'])
+
+
+    if int(repo.admin.id)!=user_id:
+        return JsonResponse(dict(
+            action=False,
+            info='you are not the owner of this repo'
+        ))
+
+    repo_path = os.path.join(base_path, repo.admin.name, repo.name)
+    deploy = repo.deploy
+
+    repo.delete()
+    if os.path.exists(repo_path):
+        remove_tree(repo_path)
+    return JsonResponse(dict(deploy=repo.deploy, path=repo_path, static='static'))
